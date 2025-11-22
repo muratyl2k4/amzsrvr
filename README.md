@@ -48,21 +48,16 @@ Proje hem büyük veri kümelerinde yüksek performans sağlayacak şekilde **th
 * Keepa veya Catalog verisinden alınır.
 * FBA, FBM, Buy Box fiyatları karşılaştırılır, en düşük seçilir:
 
-[
-\text{Buy Price} = \min(\text{Buy Price BB}, \text{Buy Price FBA}, \text{Buy Price FBM})
-]
+```
+Buy_Price = min(Buy_Price_BB, Buy_Price_FBA, Buy_Price_FBM)
+```
 
-* PackageDimensions varsa, volumetric weight (lbs_cubic) veya actual weight (lbs_weight) hesaplanır:
+* PackageDimensions varsa, volumetric weight veya actual weight hesaplanır:
 
-[
-lbs_{cubic} = \frac{Height * Length * Width}{135}
-]
-
-* Ürünün ağırlığı olarak:
-
-[
-lbs = \max(lbs_{weight}, lbs_{cubic})
-]
+```
+lbs_cubic = (Height * Length * Width) / 135
+lbs = max(lbs_weight, lbs_cubic)
+```
 
 ---
 
@@ -71,9 +66,9 @@ lbs = \max(lbs_{weight}, lbs_{cubic})
 * Keepa verisi kullanılır.
 * Minimum satış fiyatı:
 
-[
-\text{Sale Price} = \min(\text{Sale Price BB}, \text{Sale Price FBA}, \text{Sale Price FBM})
-]
+```
+Sale_Price = min(Sale_Price_BB, Sale_Price_FBA, Sale_Price_FBM)
+```
 
 ---
 
@@ -81,9 +76,9 @@ lbs = \max(lbs_{weight}, lbs_{cubic})
 
 * Kur ve shipping eklenir:
 
-[
-\text{Cost} = (\text{Buy Price} + \text{Shipping Cost} + 1) * \text{Currency Rate}
-]
+```
+Cost = (Buy_Price + Shipping_Cost + 1) * Currency_Rate
+```
 
 * Currency Rate USD dışı pazarlarda güncel döviz kuru olarak alınır.
 * +1 sabiti, handling ve ek maliyetleri temsil eder.
@@ -92,9 +87,9 @@ lbs = \max(lbs_{weight}, lbs_{cubic})
 
 ### 4️⃣ Kar Oranı (Ratio / ORAN)
 
-[
-\text{Ratio} = \frac{\text{Sale Price}}{\text{Cost}}
-]
+```
+Ratio = Sale_Price / Cost
+```
 
 * Minimum Ratio 1.5. Altındaki ASIN’ler işlem dışı bırakılır.
 
@@ -104,29 +99,29 @@ lbs = \max(lbs_{weight}, lbs_{cubic})
 
 * Basit pazarlarda (US, CA, JA, AU):
 
-[
-\text{Profit} = \text{Sale Price} - \text{Referral Fee} - \text{Pick & Pack Fee} - \text{Cost}
-]
+```
+Profit = Sale_Price - Referral_Fee - Pick_Pack_Fee - Cost
+```
 
 * AB pazarı (FR, DE):
 
-[
-\text{Profit} = \frac{5}{6} * \text{Sale Price} - 1.2 * \text{Referral Fee} - 1.2 * \text{Pick & Pack Fee} - \text{Cost}
-]
+```
+Profit = (5/6) * Sale_Price - 1.2 * Referral_Fee - 1.2 * Pick_Pack_Fee - Cost
+```
 
 * UK pazarı:
 
-[
-\text{Profit} = \text{Sale Price} - 1.2 * \text{Referral Fee} - 1.2 * \text{Pick & Pack Fee} - \text{Cost}
-]
+```
+Profit = Sale_Price - 1.2 * Referral_Fee - 1.2 * Pick_Pack_Fee - Cost
+```
 
 ---
 
 ### 6️⃣ Kar Yüzdesi (Profit_Percentage / KAR_YUZDE)
 
-[
-\text{Profit Percentage} = \frac{\text{Profit}}{\text{Cost}}
-]
+```
+Profit_Percentage = Profit / Cost
+```
 
 * Hem tabloya yazılır, hem işlenmiş ASIN seçiminde kullanılır.
 
@@ -141,11 +136,7 @@ lbs = \max(lbs_{weight}, lbs_{cubic})
 t1 = threading.Thread(target=get_Buy_Price)
 t2 = threading.Thread(target=get_Sell_Price)
 t3 = threading.Thread(target=calculate)
-```
 
-* Threadler join ile beklenir:
-
-```python
 t1.start()
 t2.start()
 t3.start()
